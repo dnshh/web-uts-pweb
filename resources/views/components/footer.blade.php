@@ -1,6 +1,5 @@
-<footer class="footer">
-    <div class="footer__inner">
-        <span>&copy; {{ date('Y') }} StokKu, aplikasi latihan Laravel MVC</span>
-        <span>Dibuat dengan Laravel dan Blade</span>
+<footer class="site-footer">
+    <div class="site-footer__inner">
+        <span>&copy; {{ date('Y') }} MeowInfo. Informasi seputar kucing.</span>
     </div>
 </footer>

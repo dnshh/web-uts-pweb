@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
-    /* ---------- LOGIN ---------- */
-
     public function login()
     {
         return view('login');
@@ -15,7 +13,6 @@ class PageController extends Controller
 
     public function authenticate(Request $request)
     {
-        // Simulasi login: cukup divalidasi, tanpa database
         $data = $request->validate([
             'username' => ['required', 'min:3', 'max:30', 'regex:/^[A-Za-z0-9_.]+$/'],
             'password' => ['required', 'min:4'],
@@ -27,55 +24,42 @@ class PageController extends Controller
             'password.min'      => 'Password minimal 4 karakter.',
         ]);
 
-        // Username dibawa ke Dashboard sebagai request parameter (query string)
         return redirect()->route('dashboard', ['username' => $data['username']]);
     }
-
-    /* ---------- DASHBOARD ---------- */
 
     public function dashboard(Request $request)
     {
         if (! $username = $request->query('username')) {
             return $this->kembaliKeLogin();
-        }
-
-        $produk = $this->produk();
-
-        $stats = [
-            ['label' => 'Jenis produk',  'value' => count($produk), 'note' => 'terdaftar di gudang'],
-            ['label' => 'Total stok',    'value' => array_sum(array_column($produk, 'stok')), 'note' => 'unit semua produk'],
-            ['label' => 'Hampir habis',  'value' => count(array_filter($produk, fn ($p) => $p['stok'] <= $p['minimum'])), 'note' => 'perlu segera dibeli'],
-            ['label' => 'Nilai stok',    'value' => 'Rp ' . number_format(array_sum(array_map(fn ($p) => $p['stok'] * $p['harga'], $produk)), 0, ',', '.'), 'note' => 'stok x harga satuan'],
-        ];
-
-        $aktivitas = [
-            ['waktu' => '08.15', 'teks' => 'Stok Beras Premium 5 kg bertambah 20 karung'],
-            ['waktu' => '09.40', 'teks' => 'Telur Ayam 1 kg terjual 12 kg'],
-            ['waktu' => '11.05', 'teks' => 'Minyak Goreng 2 L mencapai batas minimum'],
-            ['waktu' => '13.30', 'teks' => 'Harga Kopi Bubuk 200 g diperbarui'],
-        ];
-
-        return view('dashboard', compact('username', 'stats', 'aktivitas'));
     }
 
-    /* ---------- PENGELOLAAN ---------- */
+    $rasUnggulan = [
+        ['nama' => 'Kucing Domestik', 'sifat' => 'Adaptif & penuh kasih',    'gambar' => 'images/kucing-domestik.jpg'],
+        ['nama' => 'Kucing Persia',   'sifat' => 'Tenang & suka dimanja',    'gambar' => 'images/kucing-persia.jpg'],
+        ['nama' => 'Kucing Maine Coon',    'sifat' => 'Lembut & ramah', 'gambar' => 'images/kucing-mainecoon.jpg'],
+    ];
 
-    public function pengelolaan(Request $request)
-    {
-        if (! $username = $request->query('username')) {
-            return $this->kembaliKeLogin();
-        }
+    $tip = 'Kucing tidur 12-16 jam sehari.';
 
-        // Pencarian sederhana lewat request parameter ?q=
-        $q = trim((string) $request->query('q', ''));
-        $produk = array_filter($this->produk(), function ($p) use ($q) {
-            return $q === '' || stripos($p['nama'] . ' ' . $p['kategori'], $q) !== false;
-        });
+    $fakta = [
+        'judul' => 'Dengkuran tidak selalu berarti senang.',
+        'isi'   => 'Kucing juga mendengkur untuk menenangkan diri saat cemas atau sedang memulihkan tubuhnya.',
+    ];
 
-        return view('pengelolaan', ['username' => $username, 'q' => $q, 'produk' => $produk]);
-    }
+    // 'ikon' berisi path SVG (data dari controller, bukan input pengguna)
+    $fitur = [
+        ['judul' => 'Bahasa Tubuh',     'isi' => 'Ekor, telinga, dan mata mereka selalu bercerita.',
+         'ikon' => '<path d="M12 21s-7-4.4-9.3-9A5.2 5.2 0 0 1 12 6.6 5.2 5.2 0 0 1 21.3 12C19 16.6 12 21 12 21z"/>'],
+        ['judul' => 'Perawatan Dasar',  'isi' => 'Panduan sederhana untuk kucing sehat dan bahagia.',
+         'ikon' => '<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/>'],
+        ['judul' => 'Nutrisi Tepat',    'isi' => 'Kenali kebutuhan makan sesuai usia dan aktivitas.',
+         'ikon' => '<path d="M7 3v6a3 3 0 0 0 6 0V3M10 3v18M17 3c-2 2-2 6 0 8v10"/>'],
+        ['judul' => 'Waktu Bermain',    'isi' => 'Stimulasi penting untuk tubuh dan pikiran mereka.',
+         'ikon' => '<path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.2l-5.6 3 1.1-6.2L3 9.6l6.2-.9z"/>'],
+    ];
 
-    /* ---------- PROFILE ---------- */
+        return view('dashboard', compact('username', 'rasUnggulan', 'tip', 'fakta', 'fitur'));
+}
 
     public function profile(Request $request)
     {
@@ -84,19 +68,14 @@ class PageController extends Controller
         }
 
         $detail = [
-            'Username'   => $username,
-            'Email'      => strtolower($username) . '@stokku.test',
-            'Peran'      => 'Admin Gudang',
-            'Lokasi'     => 'Gudang Utama',
-            'Bergabung'  => '1 Agustus 2026',
+            'Username'    => $username,
+            'Email'       => strtolower($username) . '@kucing.test',
+            'Status'      => 'Pecinta kucing',
+            'Ras favorit' => 'Kucing Domestik',
         ];
 
-        $akses = ['Melihat dashboard', 'Mencari dan melihat data produk', 'Memantau stok minimum'];
-
-        return view('profile', compact('username', 'detail', 'akses'));
+        return view('profile', compact('username', 'detail'));
     }
-
-    /* ---------- DATA & HELPER ---------- */
 
     private function kembaliKeLogin()
     {
@@ -104,20 +83,16 @@ class PageController extends Controller
             ->withErrors(['username' => 'Silakan masuk terlebih dahulu.']);
     }
 
-    // Data contoh (pengganti database) untuk dirender dengan @foreach
-    private function produk(): array
+    // Data contoh (pengganti database)
+    private function ras(): array
     {
         return [
-            ['kode' => 'PRD-001', 'nama' => 'Beras Premium 5 kg',  'kategori' => 'Sembako',     'stok' => 48,  'minimum' => 15, 'harga' => 72000],
-            ['kode' => 'PRD-002', 'nama' => 'Minyak Goreng 2 L',   'kategori' => 'Sembako',     'stok' => 9,   'minimum' => 10, 'harga' => 38000],
-            ['kode' => 'PRD-003', 'nama' => 'Gula Pasir 1 kg',     'kategori' => 'Sembako',     'stok' => 30,  'minimum' => 12, 'harga' => 17500],
-            ['kode' => 'PRD-004', 'nama' => 'Telur Ayam 1 kg',     'kategori' => 'Segar',       'stok' => 22,  'minimum' => 10, 'harga' => 29000],
-            ['kode' => 'PRD-005', 'nama' => 'Kopi Bubuk 200 g',    'kategori' => 'Minuman',     'stok' => 14,  'minimum' => 8,  'harga' => 21000],
-            ['kode' => 'PRD-006', 'nama' => 'Teh Celup 25 pcs',    'kategori' => 'Minuman',     'stok' => 6,   'minimum' => 8,  'harga' => 9500],
-            ['kode' => 'PRD-007', 'nama' => 'Mi Instan Goreng',    'kategori' => 'Makanan',     'stok' => 120, 'minimum' => 40, 'harga' => 3200],
-            ['kode' => 'PRD-008', 'nama' => 'Susu UHT 1 L',        'kategori' => 'Minuman',     'stok' => 25,  'minimum' => 10, 'harga' => 18500],
-            ['kode' => 'PRD-009', 'nama' => 'Sabun Mandi Batang',  'kategori' => 'Kebersihan',  'stok' => 40,  'minimum' => 15, 'harga' => 4500],
-            ['kode' => 'PRD-010', 'nama' => 'Deterjen 800 g',      'kategori' => 'Kebersihan',  'stok' => 11,  'minimum' => 12, 'harga' => 16000],
+            ['nama' => 'Persia',           'asal' => 'Iran (Persia)',  'berat' => '3-5,5 kg', 'bulu' => 'Panjang', 'sifat' => 'Tenang dan suka bersantai.',          'gambar' => 'images/ras/persia.svg'],
+            ['nama' => 'Maine Coon',       'asal' => 'Amerika Serikat', 'berat' => '4-8 kg',   'bulu' => 'Panjang', 'sifat' => 'Besar, ramah, dan mudah akrab.',      'gambar' => 'images/ras/maine-coon.svg'],
+            ['nama' => 'Siam',             'asal' => 'Thailand',        'berat' => '2,5-5,5 kg', 'bulu' => 'Pendek', 'sifat' => 'Aktif dan sering mengeong.',           'gambar' => 'images/ras/siam.svg'],
+            ['nama' => 'Anggora',          'asal' => 'Turki',           'berat' => '2,5-5 kg', 'bulu' => 'Panjang', 'sifat' => 'Lincah dan suka bermain.',             'gambar' => 'images/ras/anggora.svg'],
+            ['nama' => 'British Shorthair', 'asal' => 'Inggris',        'berat' => '4-8 kg',   'bulu' => 'Pendek', 'sifat' => 'Kalem dan tidak terlalu manja.',        'gambar' => 'images/ras/british-shorthair.svg'],
+            ['nama' => 'Kucing Domestik',  'asal' => 'Di mana saja',    'berat' => '3-5 kg',   'bulu' => 'Pendek', 'sifat' => 'Tangguh dan mudah beradaptasi.',        'gambar' => 'images/ras/domestik.svg'],
         ];
     }
 }
