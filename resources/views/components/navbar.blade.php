@@ -1,9 +1,9 @@
 @props(['username'])
 
-<header class="site-header">
-    <div class="site-header__inner">
+<header class="halaman-header">
+    <div class="halaman-header-dalam">
         <a class="logo" href="{{ route('dashboard', ['username' => $username]) }}">
-            <span class="logo__icon">
+            <span class="logo_icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="#fff" aria-hidden="true">
                     <circle cx="6" cy="10" r="2.3"/><circle cx="10" cy="5.5" r="2.3"/>
                     <circle cx="14" cy="5.5" r="2.3"/><circle cx="18" cy="10" r="2.3"/>
@@ -13,9 +13,9 @@
             MeowInfo
         </a>
 
-        <button type="button" id="nav-burger" class="site-burger" aria-expanded="false" aria-controls="nav-links">Menu</button>
+        <button type="button" id="nav-menu" class="halaman-menu" aria-expanded="false" aria-controls="nav-links">Menu</button>
 
-        <nav id="nav-links" class="site-nav" aria-label="Navigasi utama">
+        <nav id="nav-links" class="halaman-nav" aria-label="Navigasi utama">
             <a href="{{ route('dashboard', ['username' => $username]) }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Beranda</a>
             <a href="{{ route('pengelolaan', ['username' => $username]) }}" class="{{ request()->routeIs('pengelolaan') ? 'active' : '' }}">Kenali Kucing</a>
             <a href="{{ route('dashboard', ['username' => $username]) }}#perawatan">Perawatan</a>
@@ -23,11 +23,11 @@
         </nav>
 
         <div class="user">
-            <div class="user__text">
+            <div class="user_text">
                 <strong>{{ $username }}</strong>
                 <a href="{{ route('login') }}">Keluar</a>
             </div>
-            <a class="user__avatar" href="{{ route('profile', ['username' => $username]) }}" aria-label="Profil {{ $username }}">
+            <a class="user_avatar" href="{{ route('profile', ['username' => $username]) }}" aria-label="Profil {{ $username }}">
                 {{ mb_strtoupper(mb_substr($username, 0, 1)) }}
             </a>
         </div>

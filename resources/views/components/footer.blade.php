@@ -1,5 +1,5 @@
-<footer class="site-footer">
-    <div class="site-footer__inner">
+<footer class="halaman-footer">
+    <div class="halaman-footer-dalam">
         <span>&copy; {{ date('Y') }} MeowInfo. Informasi seputar kucing.</span>
     </div>
 </footer>

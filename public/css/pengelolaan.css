@@ -1,0 +1,207 @@
+/* Layout utama */
+.manage {
+    width: min(1240px, 100% - 3rem);
+    margin: 0 auto;
+    padding: 3.5rem 0 5rem;
+}
+
+/* Header */
+.m-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    margin: 0;
+    color: var(--brand);
+    font-size: .8rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+}
+
+.m-eyebrow::before {
+    content: "";
+    width: 40px;
+    height: 2px;
+    background: var(--brand);
+}
+
+.manage h1 {
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    line-height: 1.05;
+    margin: 1rem 0 .9rem;
+}
+
+.manage__desc {
+    max-width: 40rem;
+    margin: 0 0 2rem;
+    color: var(--muted);
+    font-size: 1.1rem;
+}
+
+/* Pencarian */
+.m-search {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    margin-bottom: 1rem;
+}
+
+.m-search__field {
+    position: relative;
+    flex: 1 1 280px;
+}
+
+.m-search__field svg {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #7C8F89;
+    pointer-events: none;
+}
+
+.m-search__field input {
+    width: 100%;
+    padding: .95rem 1rem .95rem 3rem;
+    border: 1px solid #E1DDD6;
+    border-radius: 16px;
+    background: #fff;
+    font: inherit;
+    color: inherit;
+}
+
+.m-search__field input:focus {
+    outline: 3px solid rgba(207,85,54,.3);
+    border-color: var(--brand);
+}
+
+.m-search button {
+    padding: .95rem 1.8rem;
+    border: 0;
+    border-radius: 16px;
+    background: var(--brand);
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 12px 26px rgba(207,85,54,.25);
+}
+
+.m-search button:hover {
+    background: var(--brand-dark);
+}
+
+/* Jumlah data */
+.m-count {
+    margin: 0 0 2rem;
+    color: var(--muted);
+}
+
+.m-count a {
+    margin-left: .6rem;
+    color: var(--brand);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.m-count a:hover {
+    text-decoration: underline;
+}
+
+/* Kartu */
+.m-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.m-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.75rem;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    box-shadow: 0 10px 30px rgba(31,58,51,.06);
+    overflow: hidden;              /* baru: memotong foto mengikuti sudut kartu */
+}
+
+/* Foto selebar kartu, menempel ke tepi atas, kiri, dan kanan */
+.m-card__img {
+    width: calc(100% + 3.5rem);    /* lebar kartu + padding kiri dan kanan */
+    margin: -1.75rem -1.75rem 1.5rem;
+    aspect-ratio: 4 / 3;
+    background: var(--sand);
+    overflow: hidden;
+}
+
+.m-card__img img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;             /* foto terisi penuh tanpa gepeng */
+    object-position: center 35%;   /* fokus sedikit ke atas, supaya wajah kucing tidak terpotong */
+}
+
+.m-card h2 {
+    font-size: 1.6rem;
+    margin: 0 0 .7rem;
+}
+
+/* Badge */
+.m-badge {
+    display: inline-block;
+    padding: .25rem .8rem;
+    border-radius: 99px;
+    background: #FDEBE3;
+    color: #A63F22;
+    font-size: .82rem;
+    font-weight: 700;
+}
+
+.m-badge--plain {
+    background: #E9EFEC;
+    color: #35564D;
+}
+
+/* Informasi kartu */
+.m-facts {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr;
+    gap: .35rem .75rem;
+    margin: 1.25rem 0 1rem;
+}
+
+.m-facts dt {
+    color: var(--muted);
+}
+
+.m-facts dd {
+    margin: 0;
+    font-weight: 700;
+}
+
+.m-card__text {
+    margin: 0;
+    color: var(--muted);
+}
+
+/* Kondisi data kosong */
+.m-empty {
+    grid-column: 1 / -1;
+    padding: 3rem 1rem;
+    text-align: center;
+    color: var(--muted);
+    background: #fff;
+    border: 1px dashed var(--line);
+    border-radius: 24px;
+}
+
+/* Responsif: layar kecil */
+@media (max-width: 560px) {
+    .manage {
+        width: min(1240px, 100% - 2rem);
+        padding-top: 2rem;
+    }
+}
